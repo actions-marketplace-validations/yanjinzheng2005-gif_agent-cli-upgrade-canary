@@ -1,0 +1,28 @@
+name: Agent CLI Upgrade Canary
+description: Compare an Agent CLI baseline and candidate in isolated state before upgrading the real installation.
+author: Micro Tool Lab
+inputs:
+  config:
+    description: Path to an agent-upgrade-canary/v1 JSON config.
+    required: true
+  output:
+    description: Directory for JSON and Markdown receipts.
+    required: false
+    default: agent-upgrade-canary-output
+  fail-on:
+    description: regression, fail, or never.
+    required: false
+    default: regression
+outputs:
+  verdict:
+    description: NO_REGRESSION, REGRESSION, CANDIDATE_FAILURE, or INCONCLUSIVE.
+  report-json:
+    description: Absolute path to the JSON receipt.
+  report-markdown:
+    description: Absolute path to the Markdown receipt.
+runs:
+  using: node24
+  main: dist/action.cjs
+branding:
+  icon: activity
+  color: orange

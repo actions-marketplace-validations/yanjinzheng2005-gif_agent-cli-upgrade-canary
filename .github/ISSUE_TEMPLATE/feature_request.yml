@@ -1,0 +1,23 @@
+name: Contract request
+description: Propose one additional safe, read-only upgrade contract.
+title: "[Contract]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Real upgrade failure
+      description: Link current public evidence or provide a controlled fixture.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Exact observable contract
+      description: State the input and machine-verifiable result, not a broad feature idea.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Safety boundary
+      options:
+        - label: The contract can be tested without real credentials or production mutation.
+          required: true

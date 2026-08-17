@@ -1,0 +1,49 @@
+{
+  "name": "agent-cli-upgrade-canary",
+  "version": "0.1.0",
+  "description": "Prove whether an Agent CLI upgrade preserves startup, config, hooks, and MCP contracts before touching the real installation.",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary.git"
+  },
+  "homepage": "https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary#readme",
+  "bugs": {
+    "url": "https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "agent-upgrade-canary": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "schema",
+    "action.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "SECURITY.md",
+    "THIRD_PARTY_NOTICES.md",
+    "VALIDATION.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "fixture:regression": "npm run build && node dist/cli.js run --config fixtures/regression.json --output .fixture-regression --fail-on never",
+    "fixture:pass": "npm run build && node dist/cli.js run --config fixtures/pass.json --output .fixture-pass --fail-on fail",
+    "license:check": "node scripts/check-licenses.mjs",
+    "test:release": "npm run typecheck && npm test && npm run fixture:regression && npm run fixture:pass && npm run license:check && node scripts/check-dist.mjs && node scripts/check-dist-sync.mjs && node scripts/check-boundaries.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "esbuild": "0.28.1",
+    "typescript": "7.0.2"
+  }
+}

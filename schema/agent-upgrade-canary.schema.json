@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agent-upgrade-canary.schema.json",
+  "title": "Agent CLI Upgrade Canary configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "adapter", "targets"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "agent-upgrade-canary/v1" },
+    "name": { "type": "string", "minLength": 1 },
+    "adapter": { "enum": ["openclaw", "fixture"] },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline", "candidate"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/target" },
+        "candidate": { "$ref": "#/$defs/target" }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nodeExecutable": { "type": "string", "minLength": 1 },
+        "npmExecutable": { "type": "string", "minLength": 1 },
+        "installTimeoutMs": { "type": "integer", "minimum": 1 },
+        "probeTimeoutMs": { "type": "integer", "minimum": 1 },
+        "maxOutputBytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["version", "help", "config", "hooks", "mcp"] }
+        },
+        "requiredHooks": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "requiredMcpServers": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "openclawConfig": { "type": "object" }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "localPackagePath": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

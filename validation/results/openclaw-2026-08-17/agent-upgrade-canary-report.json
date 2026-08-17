@@ -1,0 +1,664 @@
+{
+  "schemaVersion": "agent-upgrade-canary/receipt-v1",
+  "toolVersion": "0.1.0",
+  "generatedAt": "2026-08-17T08:08:26.021Z",
+  "projectName": "OpenClaw 2026.6.33 to 2026.7.1-2 isolated observation",
+  "adapter": "openclaw",
+  "verdict": "NO_REGRESSION",
+  "summary": "Candidate preserved every declared contract that the baseline passed",
+  "baseline": {
+    "label": "baseline",
+    "requestedVersion": "2026.6.33",
+    "installedVersion": "2026.6.33",
+    "runtimeVersion": "v24.19.0",
+    "install": {
+      "status": "PASS",
+      "requestedVersion": "2026.6.33",
+      "installedVersion": "2026.6.33",
+      "summary": "Installed openclaw@2026.6.33 in the isolated prefix",
+      "process": {
+        "argv": [
+          "npm",
+          "install",
+          "--prefix",
+          "$RUN_ROOT/baseline/install",
+          "--no-save",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund",
+          "--loglevel=error",
+          "openclaw@2026.6.33"
+        ],
+        "cwd": "$RUN_ROOT/baseline",
+        "exitCode": 0,
+        "signal": null,
+        "stdout": "\nadded 306 packages in 6s\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "durationMs": 6444
+      }
+    },
+    "probes": [
+      {
+        "id": "version",
+        "status": "PASS",
+        "summary": "CLI reports installed version 2026.6.33",
+        "observed": {
+          "expectedVersion": "2026.6.33",
+          "output": "OpenClaw 2026.6.33 (7af0cfc)"
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "--version"
+          ],
+          "cwd": "$RUN_ROOT/baseline/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "OpenClaw 2026.6.33 (7af0cfc)\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 60
+        }
+      },
+      {
+        "id": "help",
+        "status": "PASS",
+        "summary": "CLI help starts without credentials",
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "--help"
+          ],
+          "cwd": "$RUN_ROOT/baseline/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "\nOpenClaw 2026.6.33 (7af0cfc) — All your chats, one OpenClaw.\n\nUsage: openclaw [options] [command]\n\nOptions:\n  --container <name>   Run the CLI inside a running Podman/Docker container\n                       named <name> (default: env OPENCLAW_CONTAINER)\n  --dev                Dev profile: isolate state under ~/.openclaw-dev, default\n                       gateway port 19001, and shift derived ports\n                       (browser/canvas)\n  -h, --help           Display help for command\n  --log-level <level>  Global log level override for file + console\n                       (silent|fatal|error|warn|info|debug|trace)\n  --no-color           Disable ANSI colors\n  --profile <name>     Use a named profile (isolates\n                       OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under\n                       ~/.openclaw-<name>)\n  -V, --version        output the version number\n\nCommands:\n  Hint: commands suffixed with * have subcommands. Run <command> --help for details.\n  acp *                Run and manage ACP-backed coding agents\n  agent                Run one agent turn via the Gateway\n  agents *             Manage isolated agents (workspaces, auth, routing)\n  approvals *          Manage exec approvals (gateway or node host)\n  backup *             Create and verify local backup archives for OpenClaw\n                       state\n  capability *         Run provider capability commands (fallback alias: infer)\n  channels *           Add, remove, login, and inspect messaging channels\n  chat                 Open a local terminal UI (alias for tui --local)\n  clawbot *            Legacy clawbot command aliases\n  commitments *        List and manage inferred follow-up commitments\n  completion           Generate shell completion script\n  config *             Non-interactive config helpers\n                       (get/set/unset/file/validate). Default: starts guided\n                       setup.\n  configure            Interactive configuration for credentials, channels,\n                       gateway, and agent defaults\n  crestodian           Open the interactive setup and repair assistant\n  cron *               Schedule and inspect Gateway background jobs\n  daemon *             Manage the Gateway service (legacy alias)\n  dashboard            Open the Control UI with your current token\n  devices *            Device pairing + token management\n  directory *          Lookup contact and group IDs (self, peers, groups) for\n                       supported chat channels\n  dns *                DNS helpers for wide-area discovery (Tailscale + CoreDNS)\n  docs                 Search the live OpenClaw docs\n  doctor               Diagnose and repair config, Gateway, plugin, and channel\n                       problems\n  exec-policy *        Show or synchronize requested exec policy with host\n                       approvals\n  gateway *            Run, inspect, and query the OpenClaw Gateway\n  health               Fetch detailed health from the running Gateway\n  help                 Display help for command\n  hooks *              Manage internal agent hooks\n  infer *              Run provider-backed model, media, search, and embedding\n                       commands\n  logs                 Tail Gateway logs locally or via RPC\n  mcp *                Manage OpenClaw MCP config and channel bridge\n  memory *             Search, inspect, and reindex memory files\n  message *            Send, read, and manage channel messages\n  migrate *            Import state from another agent system\n  models *             List, scan, and set model providers\n  node *               Run and manage the headless node host service\n  nodes *              Pair nodes and run node-host commands through the Gateway\n  onboard              Interactive onboarding for gateway, workspace, and skills\n  pairing *            Secure DM pairing (approve inbound requests)\n  plugins *            Install, enable, disable, and inspect plugins\n  proxy *              Run the OpenClaw debug proxy and inspect captured traffic\n  qr                   Generate mobile pairing QR/setup code\n  reset                Reset local config/state (keeps the CLI installed)\n  sandbox *            Manage sandbox containers for agent isolation\n  secrets *            Audit, apply, and reload SecretRef-backed credentials\n  security *           Security tools and local config audits\n  sessions *           List stored conversation sessions\n  setup                Initialize local config and an agent workspace\n  skills *             List, inspect, and install agent skills\n  status               Show Gateway, channel, model, and recent-session status\n  system *             System events, heartbeat, and presence\n  tasks *              Inspect durable background tasks and flows\n  terminal             Open a local terminal UI (alias for tui --local)\n  transcripts *        Inspect stored transcripts\n  tui                  Open a terminal UI connected to the Gateway\n  uninstall            Uninstall the gateway service + local data (CLI remains)\n  update *             Update OpenClaw and inspect update channel status\n  webhooks *           Webhook helpers and integrations\n\nExamples:\n  openclaw onboard\n    Run guided setup for a local Gateway, workspace, auth, and channels.\n  openclaw setup\n    Create the baseline config, workspace, and session folders.\n  openclaw configure\n    Change models, Gateway, channels, plugins, skills, and health checks.\n  openclaw status\n    Check Gateway, channel, model, and recent-session status.\n  openclaw doctor --fix\n    Repair common config, service, plugin, and channel problems.\n  openclaw channels add\n    Add or update a chat channel account with guided prompts.\n  openclaw channels status\n    See connected messaging accounts and login state.\n  openclaw --dev gateway\n    Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001.\n  openclaw gateway run --force\n    Start the Gateway and replace anything bound to its port.\n  openclaw models status\n    Show model/provider auth health before running agents.\n  openclaw plugins list\n    Inspect enabled, disabled, and installed plugins.\n  openclaw agent --to +15555550123 --message \"Run summary\" --deliver\n    Run one agent turn through the Gateway and optionally deliver the reply.\n  openclaw message send --channel telegram --target @mychat --message \"Hi\"\n    Send via your Telegram bot.\n\nDocs: https://docs.openclaw.ai/cli\n\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 27
+        }
+      },
+      {
+        "id": "config",
+        "status": "PASS",
+        "summary": "Config validates against the installed CLI schema",
+        "observed": {
+          "value": {
+            "valid": true,
+            "path": "$BASELINE_STATE/openclaw.json",
+            "warnings": []
+          },
+          "discoveredNames": [],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "config",
+            "validate",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/baseline/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\"valid\":true,\"path\":\"$BASELINE_STATE/openclaw.json\",\"warnings\":[]}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 836
+        }
+      },
+      {
+        "id": "hooks",
+        "status": "PASS",
+        "summary": "Required hooks are discoverable and eligible in this isolated config",
+        "observed": {
+          "value": {
+            "workspaceDir": "$RUN_ROOT/baseline/workspace",
+            "managedHooksDir": "$BASELINE_STATE/hooks",
+            "hooks": [
+              {
+                "name": "boot-md",
+                "description": "Run BOOT.md on gateway startup",
+                "emoji": "🚀",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "gateway:startup"
+                ],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#boot-md",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "bootstrap-extra-files",
+                "description": "Inject additional workspace bootstrap files via glob/path patterns",
+                "emoji": "📎",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "agent:bootstrap"
+                ],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#bootstrap-extra-files",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "command-logger",
+                "description": "Log all command events to a centralized audit file",
+                "emoji": "📝",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "command"
+                ],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#command-logger",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "compaction-notifier",
+                "description": "Send visible chat notices when session compaction starts and finishes.",
+                "emoji": "🧹",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "session:compact:before",
+                  "session:compact:after"
+                ],
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "session-memory",
+                "description": "Save session context to memory when /new or /reset command is issued",
+                "emoji": "💾",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "command:new",
+                  "command:reset"
+                ],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#session-memory",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              }
+            ]
+          },
+          "discoveredNames": [
+            "boot-md",
+            "bootstrap-extra-files",
+            "command-logger",
+            "compaction-notifier",
+            "session-memory"
+          ],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "hooks",
+            "list",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/baseline/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\n  \"workspaceDir\": \"$RUN_ROOT/baseline/workspace\",\n  \"managedHooksDir\": \"$BASELINE_STATE/hooks\",\n  \"hooks\": [\n    {\n      \"name\": \"boot-md\",\n      \"description\": \"Run BOOT.md on gateway startup\",\n      \"emoji\": \"🚀\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"gateway:startup\"\n      ],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#boot-md\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"bootstrap-extra-files\",\n      \"description\": \"Inject additional workspace bootstrap files via glob/path patterns\",\n      \"emoji\": \"📎\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"agent:bootstrap\"\n      ],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#bootstrap-extra-files\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"command-logger\",\n      \"description\": \"Log all command events to a centralized audit file\",\n      \"emoji\": \"📝\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"command\"\n      ],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#command-logger\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"compaction-notifier\",\n      \"description\": \"Send visible chat notices when session compaction starts and finishes.\",\n      \"emoji\": \"🧹\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"session:compact:before\",\n        \"session:compact:after\"\n      ],\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"session-memory\",\n      \"description\": \"Save session context to memory when /new or /reset command is issued\",\n      \"emoji\": \"💾\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"command:new\",\n        \"command:reset\"\n      ],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#session-memory\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    }\n  ]\n}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 2386
+        }
+      },
+      {
+        "id": "mcp",
+        "status": "PASS",
+        "summary": "Required MCP definitions remain discoverable without connecting to them",
+        "observed": {
+          "value": {
+            "canary-docs": {
+              "url": "http://127.0.0.1:9/mcp",
+              "transport": "streamable-http"
+            }
+          },
+          "discoveredNames": [
+            "canary-docs"
+          ],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "mcp",
+            "list",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/baseline/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\n  \"canary-docs\": {\n    \"url\": \"http://127.0.0.1:9/mcp\",\n    \"transport\": \"streamable-http\"\n  }\n}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 1432
+        }
+      }
+    ],
+    "overall": "PASS"
+  },
+  "candidate": {
+    "label": "candidate",
+    "requestedVersion": "2026.7.1-2",
+    "installedVersion": "2026.7.1-2",
+    "runtimeVersion": "v24.19.0",
+    "install": {
+      "status": "PASS",
+      "requestedVersion": "2026.7.1-2",
+      "installedVersion": "2026.7.1-2",
+      "summary": "Installed openclaw@2026.7.1-2 in the isolated prefix",
+      "process": {
+        "argv": [
+          "npm",
+          "install",
+          "--prefix",
+          "$RUN_ROOT/candidate/install",
+          "--no-save",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund",
+          "--loglevel=error",
+          "openclaw@2026.7.1-2"
+        ],
+        "cwd": "$RUN_ROOT/candidate",
+        "exitCode": 0,
+        "signal": null,
+        "stdout": "\nadded 309 packages in 6s\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "durationMs": 6230
+      }
+    },
+    "probes": [
+      {
+        "id": "version",
+        "status": "PASS",
+        "summary": "CLI reports installed version 2026.7.1-2",
+        "observed": {
+          "expectedVersion": "2026.7.1-2",
+          "output": "OpenClaw 2026.7.1-2 (0790d9f)"
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "--version"
+          ],
+          "cwd": "$RUN_ROOT/candidate/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "OpenClaw 2026.7.1-2 (0790d9f)\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 27
+        }
+      },
+      {
+        "id": "help",
+        "status": "PASS",
+        "summary": "CLI help starts without credentials",
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "--help"
+          ],
+          "cwd": "$RUN_ROOT/candidate/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "\nOpenClaw 2026.7.1-2 (0790d9f) — All your chats, one OpenClaw.\n\nUsage: openclaw [options] [command]\n\nOptions:\n  --container <name>   Run the CLI inside a running Podman/Docker container\n                       named <name> (default: env OPENCLAW_CONTAINER)\n  --dev                Dev profile: isolate state under ~/.openclaw-dev, default\n                       gateway port 19001, and shift derived ports\n                       (browser/canvas)\n  -h, --help           Display help for command\n  --log-level <level>  Global log level override for file + console\n                       (silent|fatal|error|warn|info|debug|trace)\n  --no-color           Disable ANSI colors\n  --profile <name>     Use a named profile (isolates\n                       OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under\n                       ~/.openclaw-<name>)\n  -V, --version        output the version number\n\nCommands:\n  Hint: commands suffixed with * have subcommands. Run <command> --help for details.\n  acp *                Run an ACP bridge backed by the Gateway\n  agent                Run an agent turn via the Gateway (use --local for\n                       embedded)\n  agents *             Manage isolated agents (workspaces + auth + routing)\n  approvals *          Manage exec approvals (gateway or node host)\n  attach               Attach Claude Code to a gateway session with scoped MCP\n                       tools\n  audit                Inspect metadata-only agent run and tool action records\n  backup *             Create and verify local backup archives for OpenClaw\n                       state\n  capability *         Run provider capability commands (fallback alias: infer)\n  channels *           Manage connected chat channels and accounts\n  chat                 Open a local terminal UI (alias for tui --local)\n  clawbot *            Legacy clawbot command aliases\n  commitments *        List and manage inferred follow-up commitments\n  completion           Generate shell completion script\n  config *             Non-interactive config helpers\n                       (get/set/patch/unset/file/schema/validate). Run without\n                       subcommand for guided setup.\n  configure            Interactive configuration for credentials, channels,\n                       gateway, and agent defaults\n  crestodian           Open the ring-zero setup and repair helper\n  cron *               Manage cron jobs (via Gateway)\n  daemon *             Manage the Gateway service (launchd/systemd/schtasks)\n  dashboard            Open the Control UI with your current token\n  devices *            Device pairing and auth tokens\n  directory *          Lookup contact and group IDs (self, peers, groups) for\n                       supported chat channels\n  dns *                DNS helpers for wide-area discovery (Tailscale + CoreDNS)\n  docs                 Search the live OpenClaw docs\n  doctor               Health checks + quick fixes for the gateway and channels\n  exec-approvals *     Manage exec approvals (alias for approvals)\n  exec-policy *        Show or synchronize requested exec policy with host\n                       approvals\n  gateway *            Run, inspect, and query the WebSocket Gateway\n  health               Fetch health from the running gateway\n  help                 Display help for command\n  hooks *              Manage internal agent hooks\n  infer *              Run provider-backed inference commands through a stable\n                       CLI surface\n  logs                 Tail gateway file logs via RPC\n  mcp *                Manage OpenClaw mcp.servers config and channel bridge\n  memory *             Search, inspect, and reindex memory files\n  message *            Send, read, and manage messages and channel actions\n  migrate *            Import state from another agent system\n  models *             Model discovery, scanning, and configuration\n  node *               Run and manage the headless node host service\n  nodes *              Manage gateway-owned nodes (pairing, status, invoke, and\n                       media)\n  onboard              Guided setup for auth, models, Gateway, workspace,\n                       channels, and skills\n  pairing *            Secure DM pairing (approve inbound requests)\n  plugins *            Manage OpenClaw plugins and extensions\n  promos *             Discover and claim promotional model offers from ClawHub\n  proxy *              Run the OpenClaw debug proxy and inspect captured traffic\n  qr                   Generate a mobile pairing QR code and setup code\n  reset                Reset local config/state (keeps the CLI installed)\n  sandbox *            Manage sandbox containers (Docker-based agent isolation)\n  secrets *            Secrets runtime controls\n  security *           Audit local config and state for common security\n                       foot-guns\n  sessions *           List stored conversation sessions\n  setup                Alias for openclaw onboard\n  skills *             List and inspect available skills\n  status               Show channel health and recent session recipients\n  system *             System tools (events, heartbeat, presence)\n  tasks *              Inspect durable background tasks and TaskFlow state\n  terminal             Open a local terminal UI (alias for tui --local)\n  transcripts *        Inspect stored transcripts\n  tui                  Open a terminal UI connected to the Gateway\n  uninstall            Uninstall the gateway service + local data (CLI remains)\n  update *             Update OpenClaw and inspect update channel status\n  webhooks *           Webhook helpers and integrations\n  worktrees *          Create, inspect, restore, and clean up managed worktrees\n\nExamples:\n  openclaw onboard\n    Run guided setup for a local Gateway, workspace, auth, and channels.\n  openclaw setup\n    Create the baseline config, workspace, and session folders.\n  openclaw configure\n    Change models, Gateway, channels, plugins, skills, and health checks.\n  openclaw status\n    Check Gateway, channel, model, and recent-session status.\n  openclaw doctor --fix\n    Repair common config, service, plugin, and channel problems.\n  openclaw channels add\n    Add or update a chat channel account with guided prompts.\n  openclaw channels status\n    See connected messaging accounts and login state.\n  openclaw --dev gateway\n    Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001.\n  openclaw gateway run --force\n    Start the Gateway and replace anything bound to its port.\n  openclaw models status\n    Show model/provider auth health before running agents.\n  openclaw plugins list\n    Inspect enabled, disabled, and installed plugins.\n  openclaw agent --to +15555550123 --message \"Run summary\" --deliver\n    Run one agent turn through the Gateway and optionally deliver the reply.\n  openclaw message send --channel telegram --target @mychat --message \"Hi\"\n    Send via your Telegram bot.\n\nDocs: https://docs.openclaw.ai/cli\n\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 25
+        }
+      },
+      {
+        "id": "config",
+        "status": "PASS",
+        "summary": "Config validates against the installed CLI schema",
+        "observed": {
+          "value": {
+            "valid": true,
+            "path": "$CANDIDATE_STATE/openclaw.json",
+            "warnings": []
+          },
+          "discoveredNames": [],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "config",
+            "validate",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/candidate/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\"valid\":true,\"path\":\"$CANDIDATE_STATE/openclaw.json\",\"warnings\":[]}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 1082
+        }
+      },
+      {
+        "id": "hooks",
+        "status": "PASS",
+        "summary": "Required hooks are discoverable and eligible in this isolated config",
+        "observed": {
+          "value": {
+            "workspaceDir": "$RUN_ROOT/candidate/workspace",
+            "managedHooksDir": "$CANDIDATE_STATE/hooks",
+            "hooks": [
+              {
+                "name": "boot-md",
+                "description": "Run BOOT.md on gateway startup",
+                "emoji": "🚀",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "gateway:startup"
+                ],
+                "unknownEvents": [],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#boot-md",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "bootstrap-extra-files",
+                "description": "Inject additional workspace bootstrap files via glob/path patterns",
+                "emoji": "📎",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "agent:bootstrap"
+                ],
+                "unknownEvents": [],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#bootstrap-extra-files",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "command-logger",
+                "description": "Log all command events to a centralized audit file",
+                "emoji": "📝",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "command"
+                ],
+                "unknownEvents": [],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#command-logger",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "compaction-notifier",
+                "description": "Send visible chat notices when session compaction starts and finishes.",
+                "emoji": "🧹",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "session:compact:before",
+                  "session:compact:after"
+                ],
+                "unknownEvents": [],
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              },
+              {
+                "name": "session-memory",
+                "description": "Save session context to memory when /new or /reset command is issued",
+                "emoji": "💾",
+                "eligible": true,
+                "disabled": false,
+                "enabledByConfig": true,
+                "requirementsSatisfied": true,
+                "loadable": true,
+                "source": "openclaw-bundled",
+                "events": [
+                  "command:new",
+                  "command:reset"
+                ],
+                "unknownEvents": [],
+                "homepage": "https://docs.openclaw.ai/automation/hooks#session-memory",
+                "missing": {
+                  "bins": [],
+                  "anyBins": [],
+                  "env": [],
+                  "config": [],
+                  "os": []
+                },
+                "managedByPlugin": false
+              }
+            ]
+          },
+          "discoveredNames": [
+            "boot-md",
+            "bootstrap-extra-files",
+            "command-logger",
+            "compaction-notifier",
+            "session-memory"
+          ],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "hooks",
+            "list",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/candidate/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\n  \"workspaceDir\": \"$RUN_ROOT/candidate/workspace\",\n  \"managedHooksDir\": \"$CANDIDATE_STATE/hooks\",\n  \"hooks\": [\n    {\n      \"name\": \"boot-md\",\n      \"description\": \"Run BOOT.md on gateway startup\",\n      \"emoji\": \"🚀\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"gateway:startup\"\n      ],\n      \"unknownEvents\": [],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#boot-md\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"bootstrap-extra-files\",\n      \"description\": \"Inject additional workspace bootstrap files via glob/path patterns\",\n      \"emoji\": \"📎\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"agent:bootstrap\"\n      ],\n      \"unknownEvents\": [],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#bootstrap-extra-files\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"command-logger\",\n      \"description\": \"Log all command events to a centralized audit file\",\n      \"emoji\": \"📝\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"command\"\n      ],\n      \"unknownEvents\": [],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#command-logger\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"compaction-notifier\",\n      \"description\": \"Send visible chat notices when session compaction starts and finishes.\",\n      \"emoji\": \"🧹\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"session:compact:before\",\n        \"session:compact:after\"\n      ],\n      \"unknownEvents\": [],\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    },\n    {\n      \"name\": \"session-memory\",\n      \"description\": \"Save session context to memory when /new or /reset command is issued\",\n      \"emoji\": \"💾\",\n      \"eligible\": true,\n      \"disabled\": false,\n      \"enabledByConfig\": true,\n      \"requirementsSatisfied\": true,\n      \"loadable\": true,\n      \"source\": \"openclaw-bundled\",\n      \"events\": [\n        \"command:new\",\n        \"command:reset\"\n      ],\n      \"unknownEvents\": [],\n      \"homepage\": \"https://docs.openclaw.ai/automation/hooks#session-memory\",\n      \"missing\": {\n        \"bins\": [],\n        \"anyBins\": [],\n        \"env\": [],\n        \"config\": [],\n        \"os\": []\n      },\n      \"managedByPlugin\": false\n    }\n  ]\n}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 2571
+        }
+      },
+      {
+        "id": "mcp",
+        "status": "PASS",
+        "summary": "Required MCP definitions remain discoverable without connecting to them",
+        "observed": {
+          "value": {
+            "canary-docs": {
+              "url": "http://127.0.0.1:9/mcp",
+              "transport": "streamable-http"
+            }
+          },
+          "discoveredNames": [
+            "canary-docs"
+          ],
+          "missing": [],
+          "unready": []
+        },
+        "process": {
+          "argv": [
+            "$NODE_RUNTIME",
+            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "mcp",
+            "list",
+            "--json"
+          ],
+          "cwd": "$RUN_ROOT/candidate/workspace",
+          "exitCode": 0,
+          "signal": null,
+          "stdout": "{\n  \"canary-docs\": {\n    \"url\": \"http://127.0.0.1:9/mcp\",\n    \"transport\": \"streamable-http\"\n  }\n}\n",
+          "stderr": "",
+          "timedOut": false,
+          "truncated": false,
+          "durationMs": 1583
+        }
+      }
+    ],
+    "overall": "PASS"
+  },
+  "deltas": [
+    {
+      "id": "install",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    },
+    {
+      "id": "version",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    },
+    {
+      "id": "help",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    },
+    {
+      "id": "config",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    },
+    {
+      "id": "hooks",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    },
+    {
+      "id": "mcp",
+      "baseline": "PASS",
+      "candidate": "PASS",
+      "classification": "UNCHANGED_PASS"
+    }
+  ],
+  "boundaries": [
+    "Both versions ran in separate temporary state, workspace, npm cache, and config directories.",
+    "The parent process environment was reduced to a non-secret allowlist; provider credentials were not inherited.",
+    "The canary did not mutate, upgrade, repair, or downgrade the user's real Agent CLI installation.",
+    "PASS proves only the contracts declared in this config. UNKNOWN is never converted to PASS."
+  ]
+}

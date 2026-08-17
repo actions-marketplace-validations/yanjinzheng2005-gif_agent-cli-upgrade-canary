@@ -1,0 +1,26 @@
+name: Bug report
+description: Report an incorrect receipt or reproducible runtime failure without private data.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include the smallest safe reproducer. Do not paste credentials or private configs.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Baseline and candidate versions
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Observed result
+      options: [Incorrect PASS, Incorrect FAIL, Incorrect UNKNOWN, Crash or timeout, Other]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Sanitized receipt excerpt
+      description: Remove paths, tokens, private server names, and account information.

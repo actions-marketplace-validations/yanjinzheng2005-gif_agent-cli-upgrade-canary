@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/agent-upgrade-canary.schema.json",
+  "schemaVersion": "agent-upgrade-canary/v1",
+  "name": "OpenClaw extended-stable to latest",
+  "adapter": "openclaw",
+  "targets": {
+    "baseline": { "version": "2026.6.33" },
+    "candidate": { "version": "2026.7.1-2" }
+  },
+  "runtime": {
+    "nodeExecutable": "node",
+    "npmExecutable": "npm",
+    "installTimeoutMs": 300000,
+    "probeTimeoutMs": 30000,
+    "maxOutputBytes": 1000000
+  },
+  "contracts": {
+    "checks": ["version", "help", "config", "hooks", "mcp"],
+    "requiredHooks": ["boot-md", "command-logger", "session-memory"],
+    "requiredMcpServers": ["canary-docs"]
+  },
+  "openclawConfig": {
+    "gateway": { "mode": "local" },
+    "mcp": {
+      "servers": {
+        "canary-docs": {
+          "url": "http://127.0.0.1:9/mcp",
+          "transport": "streamable-http"
+        }
+      }
+    }
+  }
+}

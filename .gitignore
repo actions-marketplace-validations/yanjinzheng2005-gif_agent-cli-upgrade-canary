@@ -1,0 +1,8 @@
+node_modules/
+.fixture-regression/
+.fixture-pass/
+.openclaw-validation/
+coverage/
+*.log
+.DS_Store
+validation/*.local.json

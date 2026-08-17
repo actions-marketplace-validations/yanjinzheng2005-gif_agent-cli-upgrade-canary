@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-upgrade-canary/v1",
+  "name": "Controlled hook regression",
+  "adapter": "fixture",
+  "targets": {
+    "baseline": { "version": "1.0.0", "localPackagePath": "./baseline" },
+    "candidate": { "version": "2.0.0", "localPackagePath": "./candidate" }
+  },
+  "contracts": {
+    "checks": ["version", "help", "config", "hooks", "mcp"],
+    "requiredHooks": ["boot-md", "command-logger", "session-memory"],
+    "requiredMcpServers": ["docs"]
+  },
+  "openclawConfig": { "gateway": { "mode": "local" } }
+}
