@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, realpath, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type {
@@ -16,7 +16,7 @@ import { runProbes } from "./probes.js";
 import { sanitizeProcess, sanitizeValue } from "./redact.js";
 import { execute } from "./process.js";
 
-export const TOOL_VERSION = "0.1.0";
+export const TOOL_VERSION = "0.1.1";
 
 function combineStatus(statuses: Status[]): Status {
   if (statuses.includes("FAIL")) return "FAIL";
@@ -104,8 +104,10 @@ async function runTarget(
 
 export async function runCanary(config: CanaryConfig, options: RunOptions = { keepWorkdir: false }): Promise<CanaryReceipt> {
   const runRoot = await mkdtemp(path.join(os.tmpdir(), "agent-upgrade-canary-"));
+  const canonicalRunRoot = await realpath(runRoot);
   const replacements: Array<[string, string]> = [
     [runRoot, "$RUN_ROOT"],
+    [canonicalRunRoot, "$RUN_ROOT"],
     [path.join(runRoot, "baseline", "state"), "$BASELINE_STATE"],
     [path.join(runRoot, "candidate", "state"), "$CANDIDATE_STATE"],
     [config.runtime.nodeExecutable, "$NODE_RUNTIME"]
@@ -119,6 +121,11 @@ export async function runCanary(config: CanaryConfig, options: RunOptions = { ke
       schemaVersion: "agent-upgrade-canary/receipt-v1",
       toolVersion: TOOL_VERSION,
       generatedAt: new Date().toISOString(),
+      environment: {
+        platform: process.platform,
+        arch: process.arch,
+        toolNodeVersion: process.version
+      },
       projectName: config.name,
       adapter: config.adapter,
       verdict,

@@ -27,52 +27,60 @@ function parseJsonOutput(result: ProcessResult): unknown {
   }
 }
 
-function collectNames(value: unknown, output = new Set<string>()): Set<string> {
-  if (Array.isArray(value)) {
-    for (const item of value) collectNames(item, output);
-    return output;
-  }
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    for (const key of ["key", "name", "id", "serverName"]) {
-      const item = record[key];
-      if (typeof item === "string") output.add(item);
-    }
-    for (const item of Object.values(record)) collectNames(item, output);
-  }
-  return output;
+function hookRecords(value: unknown): Array<Record<string, unknown>> {
+  if (!value || typeof value !== "object") return [];
+  const record = value as Record<string, unknown>;
+  const hooks = Array.isArray(value) ? value : record.hooks;
+  if (!Array.isArray(hooks)) return [];
+  return hooks.filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object" && !Array.isArray(item));
 }
 
-function collectMcpNames(value: unknown, output: Set<string>): Set<string> {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return output;
+function hookNames(value: unknown): Set<string> {
+  const names = new Set<string>();
+  for (const record of hookRecords(value)) {
+    const name = [record.key, record.name, record.id].find((candidate) => typeof candidate === "string");
+    if (typeof name === "string") names.add(name);
+  }
+  return names;
+}
+
+function mcpNames(value: unknown): Set<string> {
+  const names = new Set<string>();
+  if (!value || typeof value !== "object") return names;
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const record = item as Record<string, unknown>;
+      const name = [record.name, record.id, record.serverName].find((candidate) => typeof candidate === "string");
+      if (typeof name === "string") names.add(name);
+    }
+    return names;
+  }
   const record = value as Record<string, unknown>;
   const servers = record.servers;
   if (servers && typeof servers === "object" && !Array.isArray(servers)) {
-    for (const key of Object.keys(servers as Record<string, unknown>)) output.add(key);
+    for (const key of Object.keys(servers as Record<string, unknown>)) names.add(key);
   } else {
-    for (const key of Object.keys(record)) output.add(key);
+    for (const key of Object.keys(record)) names.add(key);
   }
-  return output;
+  return names;
 }
 
 function unreadyHooks(value: unknown, requiredNames: string[]): string[] {
   const readiness = new Map(requiredNames.map((name) => [name, false]));
-  const visit = (item: unknown): void => {
-    if (Array.isArray(item)) {
-      for (const child of item) visit(child);
-      return;
-    }
-    if (!item || typeof item !== "object") return;
-    const record = item as Record<string, unknown>;
+  for (const record of hookRecords(value)) {
     const name = [record.key, record.name, record.id].find((candidate) => typeof candidate === "string") as string | undefined;
     if (name && readiness.has(name)) {
       const ready = record.eligible !== false && record.requirementsSatisfied !== false && record.loadable !== false && record.disabled !== true;
       if (ready) readiness.set(name, true);
     }
-    for (const child of Object.values(record)) visit(child);
-  };
-  visit(value);
+  }
   return [...readiness.entries()].filter(([, ready]) => !ready).map(([name]) => name);
+}
+
+export function exactVersionObserved(output: string, expected: string): boolean {
+  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![0-9A-Za-z.+_-])v?${escaped}(?![0-9A-Za-z.+_-])`).test(output);
 }
 
 async function runCommand(config: CanaryConfig, installed: InstalledTarget, args: string[]): Promise<ProcessResult> {
@@ -103,7 +111,7 @@ async function versionProbe(config: CanaryConfig, installed: InstalledTarget): P
   const process = await runCommand(config, installed, ["--version"]);
   let status = statusForProcess(process);
   const expected = installed.receipt.installedVersion;
-  if (status === "PASS" && expected && !combinedOutput(process).includes(expected)) status = "FAIL";
+  if (status === "PASS" && expected && !exactVersionObserved(combinedOutput(process), expected)) status = "FAIL";
   return {
     id: "version",
     status,
@@ -137,8 +145,7 @@ async function jsonProbe(
   if (status === "PASS") {
     try {
       observed = parseJsonOutput(process);
-      const names = collectNames(observed);
-      if (id === "mcp") collectMcpNames(observed, names);
+      const names = id === "hooks" ? hookNames(observed) : id === "mcp" ? mcpNames(observed) : new Set<string>();
       const missing = requiredNames.filter((name) => !names.has(name));
       const unready = id === "hooks" ? unreadyHooks(observed, requiredNames.filter((name) => names.has(name))) : [];
       if (id === "config" && observed && typeof observed === "object") {

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/agent-upgrade-canary.schema.json",
+  "$id": "https://raw.githubusercontent.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/main/schema/agent-upgrade-canary.schema.json",
   "title": "Agent CLI Upgrade Canary configuration",
   "type": "object",
   "additionalProperties": false,

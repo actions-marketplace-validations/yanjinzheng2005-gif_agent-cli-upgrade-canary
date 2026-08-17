@@ -18,14 +18,14 @@ An Agent CLI can still print a version after an upgrade while required hooks bec
 
 ## Status
 
-V0.1 supports one public adapter, OpenClaw, plus a maintainers-only local fixture adapter used to prove the result semantics without network access. The public CI repeats the release checks on Ubuntu Node 20/22/24, macOS Node 24, and Windows Node 24.
+V0.1.1 supports one public adapter, OpenClaw, plus a maintainers-only local fixture adapter used to prove the result semantics without network access. The public CI repeats the controlled-fixture release checks on Ubuntu Node 20/22/24, macOS Node 24, and Windows Node 24. It does not download two real OpenClaw versions in every CI job.
 
 ## Quick start
 
 Requirements:
 
 - Node.js 20+ to run the canary itself.
-- A Node.js runtime supported by the Agent CLI under test. Current OpenClaw releases require Node 22.22.3+ or Node 24.15+; set `runtime.nodeExecutable` when the default `node` is older.
+- A Node.js runtime supported by the Agent CLI under test. As observed on 2026-08-17, the tested OpenClaw releases require a supported Node 22/24 runtime; set `runtime.nodeExecutable` when the default `node` is older and confirm the current upstream requirement.
 - npm on `PATH` for the OpenClaw adapter.
 
 ```bash
@@ -84,6 +84,8 @@ Use exact versions for reproducible receipts. Dist-tags are accepted for explora
 
 `UNKNOWN` is never converted to `PASS`.
 
+Installation is always a mandatory contract and therefore appears in every receipt even though it is not removable from the configurable `checks` list.
+
 Verdicts:
 
 - `NO_REGRESSION`: every declared contract passed on the candidate and no baseline PASS became candidate FAIL.
@@ -117,7 +119,7 @@ The bundled OpenClaw example declares an unused loopback fixture named `canary-d
 ## GitHub Action
 
 ```yaml
-- uses: yanjinzheng2005-gif/agent-cli-upgrade-canary@v0.1.0
+- uses: yanjinzheng2005-gif/agent-cli-upgrade-canary@v0.1.1
   with:
     config: examples/openclaw.example.json
     output: agent-upgrade-canary-output
@@ -132,6 +134,8 @@ The bundled OpenClaw example declares an unused loopback fixture named `canary-d
 
 The Action exposes `verdict`, `report-json`, and `report-markdown` outputs.
 
+The readable tag form above is convenient for evaluation. For a security-sensitive production workflow, verify the release and pin `uses:` to its full 40-character commit SHA so a moved tag cannot change the executed code.
+
 ## Controlled proof fixtures
 
 ```bash
@@ -139,7 +143,7 @@ npm run fixture:regression
 npm run fixture:pass
 ```
 
-The regression fixture intentionally removes `command-logger` from the candidate. The pass fixture preserves every required hook. These fixtures prove the canary can distinguish a known bad upgrade from a known good one without relying on a third-party service.
+The regression fixture intentionally removes `command-logger` from the candidate while leaving the same name in an unrelated `deprecated` list. The release gate asserts that the result is exactly `REGRESSION`, proving that only the explicit `hooks[]` collection counts. The pass fixture asserts `NO_REGRESSION`. Both fixtures also fail immediately if a parent credential reaches the child process.
 
 ## Evidence boundary
 

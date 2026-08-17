@@ -40,10 +40,16 @@ test("known bad candidate is classified as a hook regression", async () => {
   assert.equal(receipt.baseline.overall, "PASS");
   assert.equal(receipt.candidate.overall, "FAIL");
   assert.equal(receipt.deltas.find((item) => item.id === "hooks").classification, "REGRESSION");
+  const candidateHooks = receipt.candidate.probes.find((item) => item.id === "hooks");
+  assert.deepEqual(candidateHooks.observed.missing, ["command-logger"]);
+  assert.equal(candidateHooks.observed.discoveredNames.includes("command-logger"), false);
   assert.equal(jsonText.includes("sk_test_should_not_leak_123456"), false);
   assert.equal(jsonText.includes(os.tmpdir() + path.sep + "agent-upgrade-canary-"), false);
   assert.equal(jsonText.includes(process.execPath), false);
   assert.equal(jsonText.includes("$NODE_RUNTIME"), true);
+  assert.equal(jsonText.includes("/private$RUN_ROOT"), false);
+  assert.equal(receipt.environment.platform, process.platform);
+  assert.equal(receipt.environment.arch, process.arch);
 });
 
 test("known good candidate preserves every declared contract", async () => {

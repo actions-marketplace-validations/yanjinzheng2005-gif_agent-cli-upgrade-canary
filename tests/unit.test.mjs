@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { exitCodeFor, loadConfig, redactText, renderMarkdown } from "../dist/library.js";
+import { exactVersionObserved, exitCodeFor, loadConfig, redactText, renderMarkdown } from "../dist/library.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -35,6 +35,7 @@ test("markdown names the declared verdict", () => {
     schemaVersion: "agent-upgrade-canary/receipt-v1",
     toolVersion: "0.1.0",
     generatedAt: "2026-08-17T00:00:00.000Z",
+    environment: { platform: "darwin", arch: "arm64", toolNodeVersion: "v24.19.0" },
     projectName: "fixture",
     adapter: "fixture",
     verdict: "NO_REGRESSION",
@@ -45,4 +46,11 @@ test("markdown names the declared verdict", () => {
     boundaries: ["bounded"]
   };
   assert.match(renderMarkdown(receipt), /NO_REGRESSION/);
+});
+
+test("version matching accepts an exact token but rejects substring lookalikes", () => {
+  assert.equal(exactVersionObserved("Fixture Agent 1.0.0", "1.0.0"), true);
+  assert.equal(exactVersionObserved("Fixture Agent v1.0.0", "1.0.0"), true);
+  assert.equal(exactVersionObserved("Fixture Agent 11.0.0", "1.0.0"), false);
+  assert.equal(exactVersionObserved("Fixture Agent 1.0.0-beta.10", "1.0.0-beta.1"), false);
 });

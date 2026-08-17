@@ -89,6 +89,11 @@ export interface CanaryReceipt {
   schemaVersion: "agent-upgrade-canary/receipt-v1";
   toolVersion: string;
   generatedAt: string;
+  environment: {
+    platform: NodeJS.Platform;
+    arch: string;
+    toolNodeVersion: string;
+  };
   projectName: string;
   adapter: "openclaw" | "fixture";
   verdict: Verdict;

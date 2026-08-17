@@ -10,4 +10,6 @@ for (const required of ["OPENCLAW_HOME", "OPENCLAW_STATE_DIR", "OPENCLAW_CONFIG_
   if (!installer.includes(required)) throw new Error(`Isolation boundary missing from installer: ${required}`);
 }
 if (/\.\.\.process\.env/.test(installer)) throw new Error("Installer must not inherit the entire parent environment");
+const fixture = await readFile("fixtures/baseline/fixture-agent.mjs", "utf8");
+if (!fixture.includes("FORBIDDEN_PARENT_SECRET_PRESENT")) throw new Error("Fixture must fail when a parent credential reaches the child process");
 console.log("Isolation and credential boundary check: PASS");

@@ -3,7 +3,8 @@
 - Verdict: **NO_REGRESSION**
 - Summary: Candidate preserved every declared contract that the baseline passed
 - Adapter: openclaw
-- Generated: 2026-08-17T08:08:26.021Z
+- Generated: 2026-08-17T10:13:06.683Z
+- Environment: darwin / arm64 / Node v25.3.0
 - Baseline: 2026.6.33 (✅ PASS)
 - Candidate: 2026.7.1-2 (✅ PASS)
 
@@ -29,6 +30,7 @@
 
 ## Candidate evidence
 
+- **install** — PASS: Installed openclaw@2026.7.1-2 in the isolated prefix
 - **version** — PASS: CLI reports installed version 2026.7.1-2
 - **help** — PASS: CLI help starts without credentials
 - **config** — PASS: Config validates against the installed CLI schema

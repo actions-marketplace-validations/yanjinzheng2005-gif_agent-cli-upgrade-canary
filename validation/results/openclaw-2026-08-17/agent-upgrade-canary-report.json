@@ -1,7 +1,12 @@
 {
   "schemaVersion": "agent-upgrade-canary/receipt-v1",
-  "toolVersion": "0.1.0",
-  "generatedAt": "2026-08-17T08:08:26.021Z",
+  "toolVersion": "0.1.1",
+  "generatedAt": "2026-08-17T10:13:06.683Z",
+  "environment": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "toolNodeVersion": "v25.3.0"
+  },
   "projectName": "OpenClaw 2026.6.33 to 2026.7.1-2 isolated observation",
   "adapter": "openclaw",
   "verdict": "NO_REGRESSION",
@@ -36,7 +41,7 @@
         "stderr": "",
         "timedOut": false,
         "truncated": false,
-        "durationMs": 6444
+        "durationMs": 6349
       }
     },
     "probes": [
@@ -51,7 +56,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
             "--version"
           ],
           "cwd": "$RUN_ROOT/baseline/workspace",
@@ -61,7 +66,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 60
+          "durationMs": 21
         }
       },
       {
@@ -71,7 +76,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
             "--help"
           ],
           "cwd": "$RUN_ROOT/baseline/workspace",
@@ -81,7 +86,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 27
+          "durationMs": 22
         }
       },
       {
@@ -101,7 +106,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
             "config",
             "validate",
             "--json"
@@ -113,7 +118,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 836
+          "durationMs": 799
         }
       },
       {
@@ -256,7 +261,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
             "hooks",
             "list",
             "--json"
@@ -268,7 +273,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 2386
+          "durationMs": 2161
         }
       },
       {
@@ -291,7 +296,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/baseline/install/node_modules/openclaw/openclaw.mjs",
             "mcp",
             "list",
             "--json"
@@ -303,7 +308,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 1432
+          "durationMs": 1383
         }
       }
     ],
@@ -339,7 +344,7 @@
         "stderr": "",
         "timedOut": false,
         "truncated": false,
-        "durationMs": 6230
+        "durationMs": 6459
       }
     },
     "probes": [
@@ -354,7 +359,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
             "--version"
           ],
           "cwd": "$RUN_ROOT/candidate/workspace",
@@ -364,7 +369,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 27
+          "durationMs": 25
         }
       },
       {
@@ -374,7 +379,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
             "--help"
           ],
           "cwd": "$RUN_ROOT/candidate/workspace",
@@ -384,7 +389,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 25
+          "durationMs": 22
         }
       },
       {
@@ -404,7 +409,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
             "config",
             "validate",
             "--json"
@@ -416,7 +421,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 1082
+          "durationMs": 866
         }
       },
       {
@@ -564,7 +569,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
             "hooks",
             "list",
             "--json"
@@ -576,7 +581,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 2571
+          "durationMs": 2268
         }
       },
       {
@@ -599,7 +604,7 @@
         "process": {
           "argv": [
             "$NODE_RUNTIME",
-            "/private$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
+            "$RUN_ROOT/candidate/install/node_modules/openclaw/openclaw.mjs",
             "mcp",
             "list",
             "--json"
@@ -611,7 +616,7 @@
           "stderr": "",
           "timedOut": false,
           "truncated": false,
-          "durationMs": 1583
+          "durationMs": 1470
         }
       }
     ],

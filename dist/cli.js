@@ -97,7 +97,7 @@ function validateConfigObject(config) {
 }
 
 // src/core.ts
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, realpath as realpath2, rm } from "node:fs/promises";
 import os from "node:os";
 import path3 from "node:path";
 
@@ -385,50 +385,56 @@ function parseJsonOutput(result) {
     return JSON.parse(text.slice(start, end + 1));
   }
 }
-function collectNames(value, output = /* @__PURE__ */ new Set()) {
-  if (Array.isArray(value)) {
-    for (const item of value) collectNames(item, output);
-    return output;
-  }
-  if (value && typeof value === "object") {
-    const record = value;
-    for (const key of ["key", "name", "id", "serverName"]) {
-      const item = record[key];
-      if (typeof item === "string") output.add(item);
-    }
-    for (const item of Object.values(record)) collectNames(item, output);
-  }
-  return output;
+function hookRecords(value) {
+  if (!value || typeof value !== "object") return [];
+  const record = value;
+  const hooks = Array.isArray(value) ? value : record.hooks;
+  if (!Array.isArray(hooks)) return [];
+  return hooks.filter((item) => Boolean(item) && typeof item === "object" && !Array.isArray(item));
 }
-function collectMcpNames(value, output) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return output;
+function hookNames(value) {
+  const names = /* @__PURE__ */ new Set();
+  for (const record of hookRecords(value)) {
+    const name = [record.key, record.name, record.id].find((candidate) => typeof candidate === "string");
+    if (typeof name === "string") names.add(name);
+  }
+  return names;
+}
+function mcpNames(value) {
+  const names = /* @__PURE__ */ new Set();
+  if (!value || typeof value !== "object") return names;
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const record2 = item;
+      const name = [record2.name, record2.id, record2.serverName].find((candidate) => typeof candidate === "string");
+      if (typeof name === "string") names.add(name);
+    }
+    return names;
+  }
   const record = value;
   const servers = record.servers;
   if (servers && typeof servers === "object" && !Array.isArray(servers)) {
-    for (const key of Object.keys(servers)) output.add(key);
+    for (const key of Object.keys(servers)) names.add(key);
   } else {
-    for (const key of Object.keys(record)) output.add(key);
+    for (const key of Object.keys(record)) names.add(key);
   }
-  return output;
+  return names;
 }
 function unreadyHooks(value, requiredNames) {
   const readiness = new Map(requiredNames.map((name) => [name, false]));
-  const visit = (item) => {
-    if (Array.isArray(item)) {
-      for (const child of item) visit(child);
-      return;
-    }
-    if (!item || typeof item !== "object") return;
-    const record = item;
+  for (const record of hookRecords(value)) {
     const name = [record.key, record.name, record.id].find((candidate) => typeof candidate === "string");
     if (name && readiness.has(name)) {
       const ready = record.eligible !== false && record.requirementsSatisfied !== false && record.loadable !== false && record.disabled !== true;
       if (ready) readiness.set(name, true);
     }
-    for (const child of Object.values(record)) visit(child);
-  };
-  visit(value);
+  }
   return [...readiness.entries()].filter(([, ready]) => !ready).map(([name]) => name);
+}
+function exactVersionObserved(output, expected) {
+  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![0-9A-Za-z.+_-])v?${escaped}(?![0-9A-Za-z.+_-])`).test(output);
 }
 async function runCommand(config, installed, args) {
   if (!installed.executable) {
@@ -457,7 +463,7 @@ async function versionProbe(config, installed) {
   const process2 = await runCommand(config, installed, ["--version"]);
   let status = statusForProcess(process2);
   const expected = installed.receipt.installedVersion;
-  if (status === "PASS" && expected && !combinedOutput(process2).includes(expected)) status = "FAIL";
+  if (status === "PASS" && expected && !exactVersionObserved(combinedOutput(process2), expected)) status = "FAIL";
   return {
     id: "version",
     status,
@@ -483,8 +489,7 @@ async function jsonProbe(id, config, installed, args, requiredNames) {
   if (status === "PASS") {
     try {
       observed = parseJsonOutput(process2);
-      const names = collectNames(observed);
-      if (id === "mcp") collectMcpNames(observed, names);
+      const names = id === "hooks" ? hookNames(observed) : id === "mcp" ? mcpNames(observed) : /* @__PURE__ */ new Set();
       const missing = requiredNames.filter((name) => !names.has(name));
       const unready = id === "hooks" ? unreadyHooks(observed, requiredNames.filter((name) => names.has(name))) : [];
       if (id === "config" && observed && typeof observed === "object") {
@@ -551,7 +556,7 @@ function sanitizeValue(value, replacements) {
 }
 
 // src/core.ts
-var TOOL_VERSION = "0.1.0";
+var TOOL_VERSION = "0.1.1";
 function combineStatus(statuses) {
   if (statuses.includes("FAIL")) return "FAIL";
   if (statuses.includes("UNKNOWN")) return "UNKNOWN";
@@ -626,8 +631,10 @@ async function runTarget(config, label, runRoot, replacements) {
 }
 async function runCanary(config, options = { keepWorkdir: false }) {
   const runRoot = await mkdtemp(path3.join(os.tmpdir(), "agent-upgrade-canary-"));
+  const canonicalRunRoot = await realpath2(runRoot);
   const replacements = [
     [runRoot, "$RUN_ROOT"],
+    [canonicalRunRoot, "$RUN_ROOT"],
     [path3.join(runRoot, "baseline", "state"), "$BASELINE_STATE"],
     [path3.join(runRoot, "candidate", "state"), "$CANDIDATE_STATE"],
     [config.runtime.nodeExecutable, "$NODE_RUNTIME"]
@@ -641,6 +648,11 @@ async function runCanary(config, options = { keepWorkdir: false }) {
       schemaVersion: "agent-upgrade-canary/receipt-v1",
       toolVersion: TOOL_VERSION,
       generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      environment: {
+        platform: process.platform,
+        arch: process.arch,
+        toolNodeVersion: process.version
+      },
       projectName: config.name,
       adapter: config.adapter,
       verdict,
@@ -686,6 +698,7 @@ function renderMarkdown(receipt) {
     `- Summary: ${receipt.summary}`,
     `- Adapter: ${receipt.adapter}`,
     `- Generated: ${receipt.generatedAt}`,
+    `- Environment: ${receipt.environment.platform} / ${receipt.environment.arch} / Node ${receipt.environment.toolNodeVersion}`,
     `- Baseline: ${receipt.baseline.installedVersion ?? receipt.baseline.requestedVersion} (${statusMark(receipt.baseline.overall)})`,
     `- Candidate: ${receipt.candidate.installedVersion ?? receipt.candidate.requestedVersion} (${statusMark(receipt.candidate.overall)})`,
     "",
@@ -701,6 +714,7 @@ function renderMarkdown(receipt) {
   lines.push("", "## Deltas", "");
   for (const delta of receipt.deltas) lines.push(`- ${delta.id}: ${delta.baseline} \u2192 ${delta.candidate} (${delta.classification})`);
   lines.push("", "## Candidate evidence", "");
+  lines.push(`- **install** \u2014 ${receipt.candidate.install.status}: ${receipt.candidate.install.summary}`);
   for (const probe of receipt.candidate.probes) lines.push(`- **${probe.id}** \u2014 ${probe.status}: ${probe.summary}`);
   lines.push("", "## Evidence boundaries", "");
   for (const boundary of receipt.boundaries) lines.push(`- ${boundary}`);

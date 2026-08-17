@@ -2,6 +2,7 @@ node_modules/
 .fixture-regression/
 .fixture-pass/
 .openclaw-validation/
+.openclaw-issue-21488/
 coverage/
 *.log
 .DS_Store

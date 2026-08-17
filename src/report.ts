@@ -22,6 +22,7 @@ export function renderMarkdown(receipt: CanaryReceipt): string {
     `- Summary: ${receipt.summary}`,
     `- Adapter: ${receipt.adapter}`,
     `- Generated: ${receipt.generatedAt}`,
+    `- Environment: ${receipt.environment.platform} / ${receipt.environment.arch} / Node ${receipt.environment.toolNodeVersion}`,
     `- Baseline: ${receipt.baseline.installedVersion ?? receipt.baseline.requestedVersion} (${statusMark(receipt.baseline.overall)})`,
     `- Candidate: ${receipt.candidate.installedVersion ?? receipt.candidate.requestedVersion} (${statusMark(receipt.candidate.overall)})`,
     "",
@@ -37,6 +38,7 @@ export function renderMarkdown(receipt: CanaryReceipt): string {
   lines.push("", "## Deltas", "");
   for (const delta of receipt.deltas) lines.push(`- ${delta.id}: ${delta.baseline} → ${delta.candidate} (${delta.classification})`);
   lines.push("", "## Candidate evidence", "");
+  lines.push(`- **install** — ${receipt.candidate.install.status}: ${receipt.candidate.install.summary}`);
   for (const probe of receipt.candidate.probes) lines.push(`- **${probe.id}** — ${probe.status}: ${probe.summary}`);
   lines.push("", "## Evidence boundaries", "");
   for (const boundary of receipt.boundaries) lines.push(`- ${boundary}`);
