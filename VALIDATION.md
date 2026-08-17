@@ -57,6 +57,7 @@ The OpenClaw hook result proves discoverability and reported eligibility/loadabi
 - Initial public run: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/runs/32010600903>, commit `7f8569049b81a30b1cbd925ecb642c5161f32937`.
 - Final main-branch v0.1.0 run: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/runs/32010830149>, commit `e0161bc24dd9cf2c48ed15798f09b42902d0b1dd`.
 - v0.1.0 tag run: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/runs/32011013024>, commit `e0161bc24dd9cf2c48ed15798f09b42902d0b1dd`.
+- v0.1.1 implementation candidate run: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/runs/32019782927>, commit `e16816db780dd66970554972a20b2a2818cb8985`.
 - Ubuntu Node 20: PASS
 - Ubuntu Node 22: PASS
 - Ubuntu Node 24: PASS
@@ -64,3 +65,5 @@ The OpenClaw hook result proves discoverability and reported eligibility/loadabi
 - Windows Node 24: PASS
 
 Every job installed the locked dependencies, audited known vulnerabilities, ran the complete release gate, exercised the bundled Action against the controlled no-regression fixture, and uploaded a `fixture-receipt-*` artifact. These five-platform artifacts are not claims that every job downloaded two real OpenClaw versions.
+
+The final v0.1.1 tag run necessarily occurs after the immutable tag content is created. Its run URL is recorded on the GitHub Release and in the project launch log rather than being retroactively claimed inside this file.
