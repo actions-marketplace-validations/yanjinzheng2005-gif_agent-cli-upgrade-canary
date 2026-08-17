@@ -37,3 +37,16 @@ The first sandboxed attempt could not resolve `registry.npmjs.org`; both install
 Passing fixtures prove the canary's classification logic. They do not prove that any particular OpenClaw upgrade is safe. A real OpenClaw receipt is limited to the recorded package versions, Node runtime, runner OS, isolated config, and declared checks.
 
 The OpenClaw hook result proves discoverability and reported eligibility/loadability only; it does not fire a real gateway hook event. The MCP result proves the saved definition remains discoverable; it does not connect to the endpoint. No model, provider, gateway, channel, or real account was used.
+
+## Public CI
+
+- Repository: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary>
+- Initial public run: <https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/runs/32010600903>
+- Commit: `7f8569049b81a30b1cbd925ecb642c5161f32937`
+- Ubuntu Node 20: PASS
+- Ubuntu Node 22: PASS
+- Ubuntu Node 24: PASS
+- macOS Node 24: PASS
+- Windows Node 24: PASS
+
+Every job installed the locked dependencies, audited known vulnerabilities, ran the complete release gate, exercised the bundled Action against the no-regression fixture, and uploaded its receipt artifact.

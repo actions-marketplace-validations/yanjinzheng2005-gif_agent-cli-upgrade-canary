@@ -1,5 +1,7 @@
 # Agent CLI Upgrade Canary
 
+[![CI](https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/workflows/ci.yml/badge.svg)](https://github.com/yanjinzheng2005-gif/agent-cli-upgrade-canary/actions/workflows/ci.yml)
+
 Test an Agent CLI upgrade in isolation before it touches the real installation.
 
 The canary installs a baseline and a candidate in separate temporary prefixes, gives each version its own OpenClaw state/config/workspace/npm cache, runs the same declared static/read-only contracts, and writes a JSON plus Markdown receipt.
@@ -16,7 +18,7 @@ An Agent CLI can still print a version after an upgrade while required hooks bec
 
 ## Status
 
-V0.1 supports one public adapter, OpenClaw, plus a maintainers-only local fixture adapter used to prove the result semantics without network access.
+V0.1 supports one public adapter, OpenClaw, plus a maintainers-only local fixture adapter used to prove the result semantics without network access. The public CI repeats the release checks on Ubuntu Node 20/22/24, macOS Node 24, and Windows Node 24.
 
 ## Quick start
 

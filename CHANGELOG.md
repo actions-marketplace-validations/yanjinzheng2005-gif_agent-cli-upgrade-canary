@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 - Unreleased
+## 0.1.0 - 2026-08-17
 
 - Add isolated baseline/candidate installs.
 - Add OpenClaw version, help, config, hooks, and MCP contract probes.
