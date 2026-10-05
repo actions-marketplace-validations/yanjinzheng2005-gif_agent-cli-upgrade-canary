@@ -42,7 +42,7 @@
     "test:release": "npm run typecheck && npm test && npm run fixture:regression && npm run fixture:pass && npm run license:check && node scripts/check-dist.mjs && node scripts/check-dist-sync.mjs && node scripts/check-boundaries.mjs"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
+    "@types/node": "26.6.4",
     "esbuild": "0.28.1",
     "typescript": "7.0.2"
   }
